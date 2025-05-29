@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { databaseService } from '../services/DatabaseService';
 
 const GoalsContext = createContext({});
-
-const STORAGE_KEY = '@RelatorioApp:goals';
 
 const DEFAULT_GOALS = {
   monthlyHours: 0, // 0 minutos como padrão
@@ -19,9 +17,11 @@ export function GoalsProvider({ children }) {
 
   const loadGoals = async () => {
     try {
-      const storedGoals = await AsyncStorage.getItem(STORAGE_KEY);
+      const storedGoals = await databaseService.getGoals();
       if (storedGoals) {
-        setGoals(JSON.parse(storedGoals));
+        setGoals({
+          monthlyHours: Number(storedGoals.monthlyHours) || 0
+        });
       }
     } catch (error) {
       console.error('Erro ao carregar metas:', error);
@@ -32,8 +32,11 @@ export function GoalsProvider({ children }) {
 
   const saveGoals = async (newGoals) => {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newGoals));
-      setGoals(newGoals);
+      const validatedGoals = {
+        monthlyHours: Number(newGoals.monthlyHours) || 0
+      };
+      await databaseService.updateMonthlyGoal(validatedGoals.monthlyHours);
+      setGoals(validatedGoals);
     } catch (error) {
       console.error('Erro ao salvar metas:', error);
       throw error;
@@ -42,7 +45,7 @@ export function GoalsProvider({ children }) {
 
   const updateMonthlyGoal = async (hours, minutes) => {
     try {
-      const totalMinutes = (hours * 60) + minutes;
+      const totalMinutes = (Number(hours) * 60) + Number(minutes);
       const newGoals = {
         ...goals,
         monthlyHours: totalMinutes,
@@ -55,7 +58,8 @@ export function GoalsProvider({ children }) {
   };
 
   const formatGoalHours = (minutes) => {
-    const hours = Math.floor(minutes / 60);
+    const validMinutes = Number(minutes) || 0;
+    const hours = Math.floor(validMinutes / 60);
     return {
       hours,
       minutes: 0,

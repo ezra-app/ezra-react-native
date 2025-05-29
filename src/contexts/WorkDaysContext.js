@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { databaseService } from '../services/DatabaseService';
 
 const WorkDaysContext = createContext({});
-
-const STORAGE_KEY = '@RelatorioApp:workDays';
 
 export function WorkDaysProvider({ children }) {
   const [selectedDays, setSelectedDays] = useState(new Set());
@@ -15,9 +13,9 @@ export function WorkDaysProvider({ children }) {
 
   const loadWorkDays = async () => {
     try {
-      const storedDays = await AsyncStorage.getItem(STORAGE_KEY);
+      const storedDays = await databaseService.getWorkDays();
       if (storedDays) {
-        setSelectedDays(new Set(JSON.parse(storedDays)));
+        setSelectedDays(storedDays);
       }
     } catch (error) {
       console.error('Erro ao carregar dias de trabalho:', error);
@@ -28,8 +26,12 @@ export function WorkDaysProvider({ children }) {
 
   const saveWorkDays = async (days) => {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(days)));
-      setSelectedDays(days);
+      // Converte Set em Array se necessário
+      const daysArray = Array.isArray(days) ? days : Array.from(days);
+      const validDays = daysArray.filter(day => typeof day === 'number' && day >= 0 && day <= 6);
+      
+      await databaseService.updateWorkDays(validDays);
+      setSelectedDays(new Set(validDays));
     } catch (error) {
       console.error('Erro ao salvar dias de trabalho:', error);
       throw error;

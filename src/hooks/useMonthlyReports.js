@@ -35,7 +35,7 @@ export function useMonthlyReports() {
     } finally {
       setLoading(false);
     }
-  }, [loadItems]); // Removido allReports das dependências
+  }, [loadItems]);
 
   const nextMonth = useCallback(() => {
     setCurrentDate(date => {
@@ -56,7 +56,7 @@ export function useMonthlyReports() {
   // Carrega os relatórios apenas uma vez ao montar o componente
   useEffect(() => {
     loadReports();
-  }, [loadItems]);
+  }, []);
 
   return {
     loading,

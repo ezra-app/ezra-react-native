@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { databaseService } from '../services/DatabaseService';
 
 const PersonalInfoContext = createContext({});
-
-const STORAGE_KEY = '@RelatorioApp:personalInfo';
 
 export function PersonalInfoProvider({ children }) {
   const [personalInfo, setPersonalInfo] = useState({
@@ -18,9 +16,12 @@ export function PersonalInfoProvider({ children }) {
 
   const loadPersonalInfo = async () => {
     try {
-      const storedInfo = await AsyncStorage.getItem(STORAGE_KEY);
+      const storedInfo = await databaseService.getPersonalInfo();
       if (storedInfo) {
-        setPersonalInfo(JSON.parse(storedInfo));
+        setPersonalInfo({
+          name: String(storedInfo.name || ''),
+          email: String(storedInfo.email || ''),
+        });
       }
     } catch (error) {
       console.error('Erro ao carregar informações pessoais:', error);
@@ -32,10 +33,10 @@ export function PersonalInfoProvider({ children }) {
   const savePersonalInfo = async (info) => {
     try {
       const newInfo = {
-        name: info.name.trim(),
-        email: info.email.trim(),
+        name: String(info.name || '').trim(),
+        email: String(info.email || '').trim(),
       };
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newInfo));
+      await databaseService.updatePersonalInfo(newInfo);
       setPersonalInfo(newInfo);
     } catch (error) {
       console.error('Erro ao salvar informações pessoais:', error);
