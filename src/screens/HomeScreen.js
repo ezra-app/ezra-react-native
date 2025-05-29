@@ -373,10 +373,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   reportSection: {
-    flex: 0.8,
+    flex: 1,
     backgroundColor: colors.white,
-    minHeight: 0,
-    paddingBottom: 0,
   },
   sectionTitleContainer: {
     flexDirection: 'row',
@@ -414,17 +412,14 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   statsContainer: {
-    paddingVertical: 9,
-    paddingHorizontal: 15,
-    justifyContent: 'flex-end',
-    paddingBottom: 0,
+    flex: 1,
+    padding: 15,
   },
   statsCard: {
+    flex: 1,
     backgroundColor: cardTheme.background,
     borderRadius: 12,
-    padding: 14,
-    maxHeight: 150,
-    marginBottom: 0,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -435,18 +430,21 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   statsRow: {
+    flex: 1,
     flexDirection: 'column',
-    gap: 11,
+    justifyContent: 'center',
+    gap: 24,
   },
   statContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   statIconContainer: {
-    width: 42,
-    height: 42,
+    width: 48,
+    height: 48,
     backgroundColor: colors.white,
-    borderRadius: 21,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -459,18 +457,18 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   statTextContainer: {
-    marginLeft: 12,
+    marginLeft: 16,
     flex: 1,
   },
   statLabel: {
     color: colors.text.primary,
-    fontSize: 19,
+    fontSize: 22,
     fontWeight: '500',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   statValue: {
     color: colors.text.primary,
-    fontSize: 26,
+    fontSize: 32,
     fontWeight: 'bold',
   },
   navButtons: {
