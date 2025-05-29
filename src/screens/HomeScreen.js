@@ -168,7 +168,7 @@ export default function HomeScreen({ navigation }) {
 
       <View style={styles.mainContent}>
         {/* Relatório Section */}
-        <View style={styles.section}>
+        <View style={styles.reportSection}>
           <View style={styles.sectionTitleContainer}>
             {!firstName && (
               <MaterialCommunityIcons 
@@ -203,74 +203,68 @@ export default function HomeScreen({ navigation }) {
 
           {/* Stats */}
           <View style={styles.statsContainer}>
-            <View style={styles.statsWrapper}>
-              <TouchableOpacity 
-                style={[styles.statRow, styles.statRowLarge]}
-                onPress={() => navigation.navigate('ReportList', { selectedDate: date })}
-                activeOpacity={0.7}
-              >
+            <TouchableOpacity 
+              style={styles.statsCard}
+              onPress={() => navigation.navigate('ReportList', { selectedDate: date })}
+              activeOpacity={0.7}
+            >
+              <View style={styles.statsRow}>
                 <View style={styles.statContent}>
                   <View style={styles.statIconContainer}>
-                    <Ionicons name="time-outline" size={40} color={colors.secondary} />
+                    <Ionicons name="time-outline" size={32} color={colors.secondary} />
                   </View>
                   <View style={styles.statTextContainer}>
                     <Text style={styles.statLabel}>Horas:</Text>
                     <Text style={styles.statValue}>{monthlyData.totalHours}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.statRow, styles.statRowLarge]}
-                onPress={() => navigation.navigate('ReportList', { selectedDate: date })}
-                activeOpacity={0.7}
-              >
                 <View style={styles.statContent}>
                   <View style={styles.statIconContainer}>
-                    <FontAwesome5 name="graduation-cap" size={36} color={colors.secondary} />
+                    <FontAwesome5 name="graduation-cap" size={28} color={colors.secondary} />
                   </View>
                   <View style={styles.statTextContainer}>
                     <Text style={styles.statLabel}>Estudos:</Text>
                     <Text style={styles.statValue}>{monthlyData.totalStudies}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Navigation Buttons */}
-          <View style={styles.navButtons}>
-            <View style={styles.monthControlGroup}>
-              <TouchableOpacity 
-                style={styles.navButton}
-                onPress={goToPreviousMonth}
-              >
-                <Ionicons name="chevron-back" size={32} color={colors.action} />
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={styles.navButton}
-                onPress={showDatepicker}
-              >
-                <Ionicons name="calendar-outline" size={32} color={colors.action} />
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={styles.navButton}
-                onPress={goToNextMonth}
-              >
-                <Ionicons name="chevron-forward" size={32} color={colors.action} />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity 
-              style={[styles.navButton, styles.addReportButton]}
-              onPress={() => navigation.navigate('AddReport')}
-            >
-              <Ionicons name="add" size={32} color={colors.white} />
+              </View>
             </TouchableOpacity>
           </View>
         </View>
 
+        {/* Navigation Buttons */}
+        <View style={styles.navButtons}>
+          <View style={styles.monthControlGroup}>
+            <TouchableOpacity 
+              style={styles.navButton}
+              onPress={goToPreviousMonth}
+            >
+              <Ionicons name="chevron-back" size={32} color={colors.action} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.navButton}
+              onPress={showDatepicker}
+            >
+              <Ionicons name="calendar-outline" size={32} color={colors.action} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.navButton}
+              onPress={goToNextMonth}
+            >
+              <Ionicons name="chevron-forward" size={32} color={colors.action} />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity 
+            style={[styles.navButton, styles.addReportButton]}
+            onPress={() => navigation.navigate('AddReport')}
+          >
+            <Ionicons name="add" size={32} color={colors.white} />
+          </TouchableOpacity>
+        </View>
+
         {/* Goals Section */}
-        <View style={[styles.section, styles.goalsSection]}>
+        <View style={styles.goalsSection}>
           <View style={styles.goalsTitleContainer}>
             <MaterialCommunityIcons name="chart-line" size={32} color="#fff" />
             <Text style={styles.goalsTitle}>Minhas Metas</Text>
@@ -378,9 +372,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  section: {
+  reportSection: {
     flex: 1,
     backgroundColor: colors.white,
+    minHeight: 0,
+    paddingBottom: 5,
   },
   sectionTitleContainer: {
     flexDirection: 'row',
@@ -418,18 +414,17 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   statsContainer: {
-    flex: 1,
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingHorizontal: 15,
+    justifyContent: 'flex-end',
+    paddingBottom: 15,
   },
-  statsWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    gap: 15,
-  },
-  statRow: {
+  statsCard: {
     backgroundColor: cardTheme.background,
     borderRadius: 12,
+    padding: 15,
+    maxHeight: 160,
+    marginBottom: 8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -439,16 +434,17 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
-  statRowLarge: {
-    padding: 15,
+  statsRow: {
+    flexDirection: 'column',
+    gap: 12,
   },
   statContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   statIconContainer: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     backgroundColor: colors.white,
     borderRadius: 25,
     justifyContent: 'center',
@@ -463,7 +459,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   statTextContainer: {
-    marginLeft: 15,
+    marginLeft: 12,
     flex: 1,
   },
   statLabel: {
@@ -481,19 +477,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 12,
     paddingHorizontal: 20,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.background,
+    minHeight: 60,
+    marginTop: 0,
   },
   monthControlGroup: {
     flexDirection: 'row',
     gap: 20,
   },
   navButton: {
-    padding: 10,
+    padding: 8,
     backgroundColor: colors.white,
     borderRadius: 10,
     shadowColor: '#000',
@@ -506,13 +504,16 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   addReportButton: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
     backgroundColor: buttonTheme.primary.background,
   },
   goalsSection: {
+    flex: 1,
     backgroundColor: headerTheme.background,
     paddingVertical: 10,
     paddingHorizontal: 15,
+    minHeight: 0,
   },
   goalsTitleContainer: {
     flexDirection: 'row',
