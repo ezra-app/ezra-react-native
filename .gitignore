@@ -1,0 +1,93 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+.env
+.env.development
+.env.test
+.env.production
+
+# typescript
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# iOS
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+ios/xcuserdata/
+ios/*.xcworkspace/
+ios/*.xcodeproj/*
+!ios/*.xcodeproj/project.pbxproj
+!ios/*.xcodeproj/xcshareddata/
+
+# Android
+android/app/build/
+android/build/
+android/local.properties
+android/app/debug/
+android/app/release/
+android/.gradle/
+android/captures/
+android/gradle/
+android/gradlew
+android/gradlew.bat
+*.hprof
+*.apk
+*.keystore
+
+# Testing
+coverage/
+__tests__/coverage/
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# Bundle
+*.bundle
+*.bundle.map
+
+# Outros
+*.iml
+*.xcuserstate
+*.xcuserdata

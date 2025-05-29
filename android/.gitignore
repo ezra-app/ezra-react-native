@@ -1,0 +1,68 @@
+# OSX
+#
+.DS_Store
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+captures/
+.externalNativeBuild/
+.navigation/
+output.json
+
+# Gradle files
+.gradle/
+gradlew
+gradlew.bat
+gradle-wrapper.jar
+gradle-wrapper.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Bundle artifacts
+*.jsbundle
+*.jsbundle.map
+
+# Keystore files
+*.jks
+*.keystore
+keystore.properties
+
+# Google Services
+google-services.json
+
+# Environment variables
+.env*
+local.properties
+
+# Test coverage
+coverage/
+jacoco.exec
+
+# Release files
+app/release/
+app/debug/
+
+# Android Studio
+*.iws
+.idea/libraries
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
