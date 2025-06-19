@@ -85,66 +85,21 @@ export default function SettingsScreen({ navigation }) {
   const handleRestoreBackup = async () => {
     try {
       setIsProcessing(true);
-
-      // Seleciona o arquivo de backup
-      const result = await DocumentPicker.getDocumentAsync({
-        type: 'text/plain',
-        copyToCacheDirectory: true,
-      });
-
-      if (result.type === 'success') {
-        // Lê o conteúdo do arquivo
-        const response = await fetch(result.uri);
-        const backupContent = await response.text();
-
-        // Valida o backup
-        if (!BackupService.validateBackup(backupContent)) {
-          Alert.alert(
-            'Erro',
-            'O arquivo selecionado não é um backup válido.'
-          );
-          return;
-        }
-
-        // Confirma a restauração
-        Alert.alert(
-          'Confirmar Restauração',
-          'Isso irá substituir todos os dados atuais. Deseja continuar?',
-          [
-            {
-              text: 'Cancelar',
-              style: 'cancel'
-            },
-            {
-              text: 'Confirmar',
-              onPress: async () => {
-                try {
-                  await BackupService.restoreBackup(backupContent);
-                  Alert.alert(
-                    'Sucesso',
-                    'Backup restaurado com sucesso! O aplicativo será reiniciado.',
-                    [
-                      {
-                        text: 'OK',
-                        onPress: () => navigation.navigate('Home')
-                      }
-                    ]
-                  );
-                } catch (error) {
-                  Alert.alert(
-                    'Erro',
-                    'Não foi possível restaurar o backup. Tente novamente.'
-                  );
-                }
-              }
-            }
-          ]
-        );
-      }
+      await BackupService.restoreBackupFromFile();
+      Alert.alert(
+        'Sucesso',
+        'Backup restaurado com sucesso! O aplicativo será reiniciado.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Home')
+          }
+        ]
+      );
     } catch (error) {
       Alert.alert(
         'Erro',
-        'Não foi possível restaurar o backup. Tente novamente.'
+        error.message || 'Não foi possível restaurar o backup. Tente novamente.'
       );
     } finally {
       setIsProcessing(false);

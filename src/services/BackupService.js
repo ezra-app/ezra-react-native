@@ -1,4 +1,6 @@
 import { databaseService } from './DatabaseService';
+import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from 'expo-document-picker';
 
 // Chaves de armazenamento usadas no app
 const STORAGE_KEYS = {
@@ -77,57 +79,9 @@ export const BackupService = {
           });
         }
       }
-
-      // Suporte a backups antigos do AsyncStorage (versão 1.0.0)
-      if (backup.version === '1.0.0') {
-        await this.restoreLegacyBackup(data);
-      }
-
     } catch (error) {
       console.error('Erro ao restaurar backup:', error);
       throw new Error('Não foi possível restaurar o backup');
-    }
-  },
-
-  // Restaura backups antigos do AsyncStorage
-  restoreLegacyBackup: async (legacyData) => {
-    try {
-      const storageKeys = {
-        REPORTS: '@RelatorioApp:reports',
-        GOALS: '@RelatorioApp:goals', 
-        PERSONAL_INFO: '@RelatorioApp:personalInfo',
-        WORK_DAYS: '@RelatorioApp:workDays'
-      };
-
-      // Restaura informações pessoais
-      if (legacyData[storageKeys.PERSONAL_INFO]) {
-        await databaseService.updatePersonalInfo(legacyData[storageKeys.PERSONAL_INFO]);
-      }
-
-      // Restaura metas
-      if (legacyData[storageKeys.GOALS] && legacyData[storageKeys.GOALS].monthlyHours) {
-        await databaseService.updateMonthlyGoal(legacyData[storageKeys.GOALS].monthlyHours);
-      }
-
-      // Restaura dias de trabalho
-      if (legacyData[storageKeys.WORK_DAYS] && Array.isArray(legacyData[storageKeys.WORK_DAYS])) {
-        await databaseService.updateWorkDays(legacyData[storageKeys.WORK_DAYS]);
-      }
-
-      // Restaura relatórios
-      if (legacyData[storageKeys.REPORTS] && Array.isArray(legacyData[storageKeys.REPORTS])) {
-        for (const report of legacyData[storageKeys.REPORTS]) {
-          await databaseService.createReport({
-            date: report.date,
-            duration: report.duration,
-            studyHours: report.studyHours,
-            observations: report.observations
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao restaurar backup legado:', error);
-      throw error;
     }
   },
 
@@ -138,6 +92,33 @@ export const BackupService = {
       return !!(backup.version && backup.timestamp && backup.data);
     } catch (error) {
       return false;
+    }
+  },
+
+  // Restaura os dados a partir de um arquivo selecionado pelo usuário
+  restoreBackupFromFile: async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: '*/*',
+        copyToCacheDirectory: true
+      });
+
+      // Compatível com ambas as versões do expo-document-picker
+      let uri;
+      if (result.assets && result.assets.length > 0 && !result.canceled) {
+        uri = result.assets[0].uri;
+      } else if (result.type === 'success' && result.uri) {
+        uri = result.uri;
+      } else {
+        throw new Error('Seleção de arquivo cancelada');
+      }
+
+      const content = await FileSystem.readAsStringAsync(uri);
+      await BackupService.restoreBackup(content);
+      return true;
+    } catch (error) {
+      console.error('Erro ao restaurar backup:', error);
+      throw new Error('Não foi possível restaurar o backup do arquivo selecionado');
     }
   }
 }; 
