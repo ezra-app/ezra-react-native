@@ -8,6 +8,7 @@ import { useGoals } from '../contexts/GoalsContext';
 import { usePersonalInfo } from '../contexts/PersonalInfoContext';
 import { useWorkDays } from '../contexts/WorkDaysContext';
 import { dateUtils } from '../utils/dateUtils';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 export default function HomeScreen({ navigation }) {
   const [date, setDate] = useState(new Date());
@@ -272,31 +273,53 @@ export default function HomeScreen({ navigation }) {
           
           <View style={styles.goalsContent}>
             {goals.monthlyHours > 0 ? (
-              <View style={styles.goalsWrapper}>
-                <View style={styles.goalCard}>
-                  <View style={styles.goalIconContainer}>
-                    <MaterialCommunityIcons name="target" size={32} color="#2B7C85" />
+              monthlyData.totalMinutes >= goals.monthlyHours && goals.monthlyHours > 0 ? (
+                <View style={styles.goalsWrapper}>
+                  {monthlyData.totalMinutes >= goals.monthlyHours && goals.monthlyHours > 0 && (
+                    <ConfettiCannon
+                      count={120}
+                      origin={{ x: 180, y: 0 }}
+                      fadeOut={true}
+                      explosionSpeed={350}
+                      fallSpeed={2500}
+                      autoStart={true}
+                    />
+                  )}
+                  <View style={styles.congratsStateContainer}>
+                    <Text style={styles.congratsEmoji}>🎉</Text>
+                    <Text style={styles.congratsStateTitle}>Parabéns!</Text>
+                    <Text style={styles.congratsStateDescription}>
+                      Você atingiu sua meta mensal de {formatGoalHours(goals.monthlyHours).formatted} horas!
+                    </Text>
                   </View>
-                  <Text style={styles.goalLabel}>Meta Mensal:</Text>
-                  <Text style={styles.goalValue}>{formatGoalHours(goals.monthlyHours).formatted}</Text>
                 </View>
+              ) : (
+                <View style={styles.goalsWrapper}>
+                  <View style={styles.goalCard}>
+                    <View style={styles.goalIconContainer}>
+                      <MaterialCommunityIcons name="target" size={32} color="#2B7C85" />
+                    </View>
+                    <Text style={styles.goalLabel}>Meta Mensal:</Text>
+                    <Text style={styles.goalValue}>{formatGoalHours(goals.monthlyHours).formatted}</Text>
+                  </View>
 
-                <View style={styles.goalCard}>
-                  <View style={styles.goalIconContainer}>
-                    <MaterialCommunityIcons name="clock-time-four" size={32} color="#2B7C85" />
+                  <View style={styles.goalCard}>
+                    <View style={styles.goalIconContainer}>
+                      <MaterialCommunityIcons name="clock-time-four" size={32} color="#2B7C85" />
+                    </View>
+                    <Text style={styles.goalLabel}>Meta Diária:</Text>
+                    <Text style={styles.goalValue}>{calculateDailyGoal()}</Text>
                   </View>
-                  <Text style={styles.goalLabel}>Meta Diária:</Text>
-                  <Text style={styles.goalValue}>{calculateDailyGoal()}</Text>
-                </View>
 
-                <View style={styles.goalCard}>
-                  <View style={styles.goalIconContainer}>
-                    <MaterialCommunityIcons name="timer-sand" size={32} color="#2B7C85" />
+                  <View style={styles.goalCard}>
+                    <View style={styles.goalIconContainer}>
+                      <MaterialCommunityIcons name="timer-sand" size={32} color="#2B7C85" />
+                    </View>
+                    <Text style={styles.goalLabel}>Faltam:</Text>
+                    <Text style={styles.goalValue}>{calculateRemainingHours()}</Text>
                   </View>
-                  <Text style={styles.goalLabel}>Faltam:</Text>
-                  <Text style={styles.goalValue}>{calculateRemainingHours()}</Text>
                 </View>
-              </View>
+              )
             ) : (
               <View style={styles.emptyStateContainer}>
                 <View style={styles.emptyStateIconContainer}>
@@ -638,5 +661,30 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  congratsStateContainer: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    minHeight: 200,
+    justifyContent: 'center',
+  },
+  congratsEmoji: {
+    fontSize: 48,
+    textAlign: 'center',
+  },
+  congratsStateTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.white,
+  },
+  congratsStateDescription: {
+    fontSize: 18,
+    color: colors.white,
+    textAlign: 'center',
+    marginBottom: 8,
+    opacity: 0.9,
+    lineHeight: 24,
   },
 }); 
