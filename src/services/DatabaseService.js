@@ -160,8 +160,9 @@ class DatabaseService {
   // =================== GOALS ===================
   async updateMonthlyGoal(monthlyHours) {
     try {
+      // Atualiza o primeiro registro existente
       await this.db.runAsync(
-        'UPDATE goals SET monthly_hours = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1',
+        'UPDATE goals SET monthly_hours = ?, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM goals LIMIT 1)',
         [monthlyHours]
       );
     } catch (error) {
@@ -172,7 +173,8 @@ class DatabaseService {
 
   async getGoals() {
     try {
-      const goals = await this.db.getFirstAsync('SELECT * FROM goals WHERE id = 1');
+      // Seleciona o primeiro registro existente
+      const goals = await this.db.getFirstAsync('SELECT * FROM goals LIMIT 1');
       return {
         monthlyHours: goals ? goals.monthly_hours : 0
       };
@@ -185,8 +187,9 @@ class DatabaseService {
   // =================== PERSONAL INFO ===================
   async updatePersonalInfo(personalInfo) {
     try {
+      // Atualiza o primeiro registro existente
       await this.db.runAsync(
-        'UPDATE personal_info SET name = ?, email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1',
+        'UPDATE personal_info SET name = ?, email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM personal_info LIMIT 1)',
         [personalInfo.name, personalInfo.email]
       );
     } catch (error) {
@@ -197,7 +200,8 @@ class DatabaseService {
 
   async getPersonalInfo() {
     try {
-      const info = await this.db.getFirstAsync('SELECT * FROM personal_info WHERE id = 1');
+      // Seleciona o primeiro registro existente
+      const info = await this.db.getFirstAsync('SELECT * FROM personal_info LIMIT 1');
       return {
         name: info ? info.name : '',
         email: info ? info.email : ''
