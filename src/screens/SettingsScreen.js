@@ -15,6 +15,7 @@ import { colors, headerTheme } from '../constants/colors';
 import { useGoals } from '../contexts/GoalsContext';
 import { BackupService } from '../services/BackupService';
 import * as DocumentPicker from 'expo-document-picker';
+import * as Updates from 'expo-updates';
 
 const SettingSection = ({ title, children }) => (
   <View style={styles.section}>
@@ -83,27 +84,42 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const handleRestoreBackup = async () => {
-    try {
-      setIsProcessing(true);
-      await BackupService.restoreBackupFromFile();
-      Alert.alert(
-        'Sucesso',
-        'Backup restaurado com sucesso! O aplicativo será reiniciado.',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('Home')
+    Alert.alert(
+      'Atenção',
+      'Esta ação irá substituir TODOS os dados atuais do aplicativo pelos dados do backup selecionado. Deseja continuar?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Restaurar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setIsProcessing(true);
+              await BackupService.restoreBackupFromFile();
+              Alert.alert(
+                'Sucesso',
+                'Backup restaurado com sucesso! O aplicativo será reiniciado.',
+                [
+                  {
+                    text: 'OK',
+                    onPress: async () => {
+                      await Updates.reloadAsync();
+                    }
+                  }
+                ]
+              );
+            } catch (error) {
+              Alert.alert(
+                'Erro',
+                error.message || 'Não foi possível restaurar o backup. Tente novamente.'
+              );
+            } finally {
+              setIsProcessing(false);
+            }
           }
-        ]
-      );
-    } catch (error) {
-      Alert.alert(
-        'Erro',
-        error.message || 'Não foi possível restaurar o backup. Tente novamente.'
-      );
-    } finally {
-      setIsProcessing(false);
-    }
+        }
+      ]
+    );
   };
 
   return (
