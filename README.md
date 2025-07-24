@@ -60,16 +60,6 @@ npx eas build -p ios --profile production
 
 ---
 
-## 🖼️ Screenshots
-
-<p align="center">
-  <img src="./assets/screenshots/home.png" width="200" />
-  <img src="./assets/screenshots/goals.png" width="200" />
-  <img src="./assets/screenshots/report.png" width="200" />
-</p>
-
----
-
 ## 🛠️ Tecnologias
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
